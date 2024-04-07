@@ -1,8 +1,5 @@
 // src\models\entities\category.js - (created by: logicinfo.com.br/ael)
-import { BaseEntity } from './base.entity.js'
-
-
-export class Product extends BaseEntity {
+export class Product {
 
     constructor(id, name, price, created_at, updated_at) {
         this.id = id

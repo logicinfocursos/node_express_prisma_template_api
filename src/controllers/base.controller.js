@@ -18,8 +18,9 @@ export class BaseController {
     try {
 
       const result = await this.repository.getAll()
+      const objectList = this.mapOjects(result)
 
-      response.status(200).send(result)
+      response.status(200).send(objectList)
 
     } catch (e) {
 
@@ -33,10 +34,11 @@ export class BaseController {
   async getById(request, response) {
 
     try {
-      
-      const result = await this.repository.getById(Number(request.params.id))
 
-      response.status(200).send(result)
+      const result = await this.repository.getById(Number(request.params.id))
+      const object = this.mapOjects(result)
+
+      response.status(200).send(object)
 
     } catch (e) {
 
@@ -53,8 +55,9 @@ export class BaseController {
       const { key, field } = request.params
 
       const result = await this.repository.getListByKey(key, field)
+      const objectList = this.mapOjects(result)
 
-      response.status(200).send(result)
+      response.status(200).send(objectList)
 
     } catch (e) {
 
@@ -68,9 +71,11 @@ export class BaseController {
   async create(request, response) {
 
     try {
-      const result = await this.repository.create(request.body)
 
-      response.status(201).send(result)
+      const result = await this.repository.create(request.body)
+      const object = this.mapOjects(result)
+
+      response.status(201).send(object)
 
     } catch (e) {
 
@@ -85,8 +90,10 @@ export class BaseController {
 
     try {
       const result = await this.repository.update(Number(request.params.id), request.body)
+      const object = this.mapOjects(result)
 
-      response.status(200).send(result)
+      response.status(200).send(object)
+
 
     } catch (e) {
 
@@ -107,6 +114,36 @@ export class BaseController {
     } catch (e) {
 
       response.status(400).send(e)
+
+    }
+  }
+
+
+  mapOjects(result) {
+    if (Array.isArray(result)) {
+      return result.map((object) => {
+        let newObject = {}
+        Object.keys(object).forEach((key) => {
+          newObject[key] = object[key]
+        })
+        return newObject
+      })
+    } else {
+      let newObject = {}
+      Object.keys(result).forEach((key) => {
+        newObject[key] = result[key]
+      })
+      return newObject
+    }
+  }
+
+  mapEntity(data) {
+
+    for (let key in data) {
+
+      if (data.hasOwnProperty(key)) {
+        key = data[key]
+      }
 
     }
   }
